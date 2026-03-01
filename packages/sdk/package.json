@@ -1,0 +1,47 @@
+{
+  "name": "@gns-aip/sdk",
+  "version": "0.1.0",
+  "description": "AI Agent Identity Protocol — Proof-of-Jurisdiction for AI agents on the GNS Protocol",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node test.js",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "gns",
+    "ai-agent",
+    "identity",
+    "delegation",
+    "compliance",
+    "eu-ai-act",
+    "proof-of-jurisdiction",
+    "h3",
+    "ed25519",
+    "stellar",
+    "mcp"
+  ],
+  "author": "GNS Foundation",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GNS-Foundation/GNS-AIP",
+    "directory": "packages/sdk"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "tweetnacl": "^1.0.3",
+    "h3-js": "^4.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

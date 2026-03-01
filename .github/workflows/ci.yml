@@ -1,0 +1,55 @@
+# =============================================================================
+# GNS-AIP — Continuous Integration
+# =============================================================================
+# Runs on every push to main and every pull request.
+# - Installs dependencies
+# - Builds all packages (TypeScript compilation)
+# - Runs all test suites
+# =============================================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all packages
+        run: npm run build
+
+      - name: Run SDK tests
+        run: node packages/sdk/test.js
+
+      - name: Verify package contents
+        run: |
+          echo "=== SDK dist contents ==="
+          ls -la packages/sdk/dist/
+          echo ""
+          echo "=== Type declarations ==="
+          ls packages/sdk/dist/*.d.ts
+          echo ""
+          echo "=== Package size ==="
+          cd packages/sdk && npm pack --dry-run 2>&1 | tail -5

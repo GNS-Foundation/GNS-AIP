@@ -1,0 +1,87 @@
+# =============================================================================
+# GNS-AIP — Publish to npm
+# =============================================================================
+# Triggered when a version tag is pushed (e.g., v0.1.0).
+#
+# Usage:
+#   git tag v0.1.0
+#   git push origin v0.1.0
+#
+# Prerequisites:
+#   1. Create npm org: https://www.npmjs.com/org/create → "gns-aip"
+#   2. Generate npm access token: https://www.npmjs.com/settings/~/tokens
+#   3. Add to GitHub secrets: Settings → Secrets → NPM_TOKEN
+# =============================================================================
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish-sdk:
+    name: Publish @gns-aip/sdk
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all packages
+        run: npm run build
+
+      - name: Run tests
+        run: node packages/sdk/test.js
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Verify version matches package.json
+        run: |
+          PKG_VERSION=$(node -p "require('./packages/sdk/package.json').version")
+          TAG_VERSION=${{ steps.version.outputs.VERSION }}
+          if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
+            echo "❌ Version mismatch: package.json=$PKG_VERSION, tag=$TAG_VERSION"
+            echo "   Update packages/sdk/package.json version to $TAG_VERSION first."
+            exit 1
+          fi
+          echo "✅ Version match: $PKG_VERSION"
+
+      - name: Publish @gns-aip/sdk to npm
+        run: |
+          cd packages/sdk
+          npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "@gns-aip/sdk v${{ steps.version.outputs.VERSION }}"
+          body: |
+            ## @gns-aip/sdk v${{ steps.version.outputs.VERSION }}
+
+            Install:
+            ```bash
+            npm install @gns-aip/sdk@${{ steps.version.outputs.VERSION }}
+            ```
+
+            [npm package](https://www.npmjs.com/package/@gns-aip/sdk/v/${{ steps.version.outputs.VERSION }})
+          generate_release_notes: true
