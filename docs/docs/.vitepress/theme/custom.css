@@ -1,0 +1,131 @@
+/* GNS-AIP Developer Portal — Custom Theme */
+
+:root {
+  /* GNS-AIP brand: dark navy + electric teal */
+  --vp-c-brand-1: #00D4AA;
+  --vp-c-brand-2: #00B894;
+  --vp-c-brand-3: #009B7D;
+  --vp-c-brand-soft: rgba(0, 212, 170, 0.14);
+
+  /* Tip = teal, Warning = amber, Danger = red */
+  --vp-c-tip-1: #00D4AA;
+  --vp-c-tip-soft: rgba(0, 212, 170, 0.14);
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #00D4AA 0%, #0EA5E9 50%, #8B5CF6 100%);
+
+  --vp-home-hero-image-background-image: radial-gradient(circle, rgba(0,212,170,0.2) 0%, transparent 70%);
+  --vp-home-hero-image-filter: blur(56px);
+}
+
+.dark {
+  --vp-c-bg: #0A1628;
+  --vp-c-bg-alt: #0F1F36;
+  --vp-c-bg-soft: #142740;
+  --vp-c-bg-elv: #142740;
+
+  --vp-home-hero-image-background-image: radial-gradient(circle, rgba(0,212,170,0.15) 0%, transparent 70%);
+}
+
+/* Hide default VitePress language picker — we use explicit nav links */
+.VPNavBarMenu .VPFlyout .text[class*="vpi"] {
+  display: none;
+}
+.VPMenuGroup[data-v-] {
+  display: none;
+}
+
+/* Bigger navbar logo */
+.VPNavBarTitle .logo {
+  height: 36px !important;
+  width: 36px !important;
+}
+
+/* Hero section refinements */
+.VPHero .name {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.VPHero .text {
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+}
+
+.VPHero .tagline {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Feature cards */
+.VPFeature {
+  border: 1px solid var(--vp-c-divider);
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+}
+
+/* Code blocks */
+.vp-doc div[class*='language-'] {
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-divider);
+}
+
+/* Badge for framework labels */
+.framework-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.framework-badge.ts { background: #3178C6; color: white; }
+.framework-badge.py { background: #3776AB; color: white; }
+.framework-badge.langchain { background: #1C3C3C; color: #00D4AA; }
+.framework-badge.openai { background: #412991; color: white; }
+.framework-badge.vercel { background: #000; color: white; }
+.framework-badge.crewai { background: #FF6B35; color: white; }
+.framework-badge.autogen { background: #0078D4; color: white; }
+
+/* Custom container for "Lines of code" callout */
+.lines-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--vp-c-brand-soft);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vp-c-brand-1);
+}
+
+/* Feature card icon cyphers */
+.VPFeature .VPImage,
+.VPFeature .icon {
+  font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  color: var(--vp-c-brand-1);
+}
+
+/* Table improvements */
+.vp-doc table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
