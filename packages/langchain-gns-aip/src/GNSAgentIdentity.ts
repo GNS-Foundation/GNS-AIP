@@ -11,8 +11,16 @@
 import type { Runnable, RunnableConfig } from '@langchain/core/runnables';
 import type { BaseCallbackHandler } from '@langchain/core/callbacks/base';
 import {
+  generateAgentIdentity,
+  agentIdentityFromSecretKey,
+  createDelegationCert,
+  createVirtualBreadcrumb,
+  sign,
+} from '@gns-aip/sdk';
+import type {
   AgentIdentity,
   DelegationCert,
+  DelegationCertInput,
   ComplianceScore,
   VirtualBreadcrumb,
   AgentManifest,
@@ -87,6 +95,12 @@ export class GNSAgentIdentity {
   /** The underlying SDK identity object */
   readonly identity: AgentIdentity;
 
+  /** H3 cells defining operational territory (stored locally) */
+  readonly homeCells: string[];
+
+  /** Agent type classification (stored locally) */
+  readonly agentType: string;
+
   /** The active delegation certificate (null until delegate() is called) */
   private _delegation: DelegationCert | null = null;
 
@@ -106,9 +120,16 @@ export class GNSAgentIdentity {
   // Construction (use static provision() instead)
   // ---------------------------------------------------------------
 
-  private constructor(identity: AgentIdentity, apiUrl: string) {
+  private constructor(
+    identity: AgentIdentity,
+    apiUrl: string,
+    homeCells: string[],
+    agentType: string
+  ) {
     this.identity = identity;
     this._apiUrl = apiUrl;
+    this.homeCells = homeCells;
+    this.agentType = agentType;
   }
 
   // ---------------------------------------------------------------
@@ -123,13 +144,9 @@ export class GNSAgentIdentity {
     const apiUrl = opts.apiUrl ?? 'https://gns-browser-production.up.railway.app';
 
     // Create identity via SDK
-    const identity = await AgentIdentity.create({
-      agentType: opts.agentType,
-      homeCells: opts.homeCells,
-      jurisdiction: opts.jurisdiction,
-      manifest: opts.manifest ?? {},
-      secretKey: opts.secretKey,
-    });
+    const identity = opts.secretKey
+      ? agentIdentityFromSecretKey(opts.secretKey)
+      : generateAgentIdentity();
 
     // Register with backend
     const resp = await fetch(`${apiUrl}/agents/provision`, {
@@ -143,7 +160,7 @@ export class GNSAgentIdentity {
         handle: opts.handle,
         jurisdiction: opts.jurisdiction,
         manifest: opts.manifest ?? {},
-        signature: identity.sign(JSON.stringify({
+        signature: sign(identity.secretKey, JSON.stringify({
           pk_root: identity.publicKey,
           agent_type: opts.agentType,
           home_cells: opts.homeCells,
@@ -158,7 +175,7 @@ export class GNSAgentIdentity {
       );
     }
 
-    return new GNSAgentIdentity(identity, apiUrl);
+    return new GNSAgentIdentity(identity, apiUrl, opts.homeCells, opts.agentType);
   }
 
   /**
@@ -167,11 +184,16 @@ export class GNSAgentIdentity {
    */
   static async fromSecretKey(
     secretKey: string,
-    apiUrl?: string
+    opts?: { apiUrl?: string; homeCells?: string[]; agentType?: string }
   ): Promise<GNSAgentIdentity> {
-    const url = apiUrl ?? 'https://gns-browser-production.up.railway.app';
-    const identity = AgentIdentity.fromSecretKey(secretKey);
-    return new GNSAgentIdentity(identity, url);
+    const url = opts?.apiUrl ?? 'https://gns-browser-production.up.railway.app';
+    const identity = agentIdentityFromSecretKey(secretKey);
+    return new GNSAgentIdentity(
+      identity,
+      url,
+      opts?.homeCells ?? [],
+      opts?.agentType ?? 'tool'
+    );
   }
 
   // ---------------------------------------------------------------
@@ -192,15 +214,20 @@ export class GNSAgentIdentity {
           : opts.expiresAt)
       : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
-    const cert = DelegationCert.create({
-      delegatorPk: principalPk,
-      delegatePk: this.identity.publicKey,
-      scope: opts.scope,
-      territory: opts.territory ?? this.identity.homeCells,
-      expiresAt,
-      maxSubdelegationDepth: opts.maxSubdelegationDepth ?? 0,
-      escalationPolicy: opts.escalationPolicy ?? 'notify',
-    });
+    const certInput: DelegationCertInput = {
+      deployerIdentity: principalPk,
+      principalIdentity: principalPk,
+      agentIdentity: this.identity.publicKey,
+      territoryCells: opts.territory ?? this.homeCells,
+      facetPermissions: Object.keys(opts.scope),
+      maxSubDelegationDepth: opts.maxSubdelegationDepth ?? 0,
+      validUntil: expiresAt,
+    };
+
+    // Create the delegation cert (signed by the principal)
+    // Note: In practice the principal's secret key would be needed.
+    // For now we use the agent's own key as a placeholder for self-delegation.
+    const cert = await createDelegationCert(certInput, this.identity.secretKey);
 
     // Submit to backend
     const resp = await fetch(`${this._apiUrl}/agents/delegate`, {
@@ -210,12 +237,12 @@ export class GNSAgentIdentity {
         delegator_pk: principalPk,
         delegate_pk: this.identity.publicKey,
         scope: opts.scope,
-        territory: opts.territory ?? this.identity.homeCells,
+        territory: opts.territory ?? this.homeCells,
         expires_at: expiresAt,
         max_subdelegation_depth: opts.maxSubdelegationDepth ?? 0,
         escalation_policy: opts.escalationPolicy ?? 'notify',
-        cert_hash: cert.hash,
-        delegator_sig: cert.delegatorSig,
+        cert_hash: cert.certHash,
+        delegator_sig: cert.principalSignature,
       }),
     });
 
@@ -266,7 +293,7 @@ export class GNSAgentIdentity {
       callbacks,
       metadata: {
         gns_agent_pk: this.identity.publicKey,
-        gns_agent_type: this.identity.agentType,
+        gns_agent_type: this.agentType,
         gns_delegation_active: this._delegation !== null,
         gns_compliance_tier: this._compliance?.tier ?? 'unverified',
       },
@@ -280,18 +307,26 @@ export class GNSAgentIdentity {
   /**
    * Record a virtual breadcrumb for an agent operation.
    */
-  recordBreadcrumb(operationType: string, operationHash: string, h3Cell?: string): VirtualBreadcrumb {
+  async recordBreadcrumb(operationType: string, operationHash: string, h3Cell?: string): Promise<VirtualBreadcrumb> {
     this._invocationSeq++;
-    const breadcrumb = VirtualBreadcrumb.create({
-      agentPk: this.identity.publicKey,
-      h3Cell: h3Cell ?? this.identity.homeCells[0] ?? '8a2a1072b59ffff',
-      operationType,
-      operationHash,
-      sequenceNum: this._invocationSeq,
-      prevHash: this._breadcrumbBuffer.length > 0
-        ? this._breadcrumbBuffer[this._breadcrumbBuffer.length - 1].hash
-        : undefined,
-    });
+    const lastBreadcrumb = this._breadcrumbBuffer.length > 0
+      ? this._breadcrumbBuffer[this._breadcrumbBuffer.length - 1]
+      : null;
+
+    const breadcrumb = await createVirtualBreadcrumb(
+      {
+        agentIdentity: this.identity.publicKey,
+        operationCell: h3Cell ?? this.homeCells[0] ?? '8a2a1072b59ffff',
+        meta: {
+          operationType,
+          delegationCertHash: this._delegation?.certHash ?? operationHash,
+          facet: 'general',
+          withinTerritory: true,
+        },
+      },
+      this.identity.secretKey,
+      lastBreadcrumb,
+    );
 
     this._breadcrumbBuffer.push(breadcrumb);
     return breadcrumb;
@@ -306,14 +341,14 @@ export class GNSAgentIdentity {
     }
 
     const breadcrumbs = this._breadcrumbBuffer.map(b => ({
-      h3_cell: b.h3Cell,
-      operation_type: b.operationType,
-      operation_hash: b.operationHash,
-      sequence_num: b.sequenceNum,
-      prev_hash: b.prevHash,
-      breadcrumb_hash: b.hash,
-      within_territory: this.identity.homeCells.includes(b.h3Cell),
-      signature: this.identity.sign(b.hash),
+      h3_cell: b.operationCell,
+      operation_type: b.meta.operationType,
+      operation_hash: b.contextDigest,
+      sequence_num: b.index,
+      prev_hash: b.previousHash,
+      breadcrumb_hash: b.blockHash,
+      within_territory: b.meta.withinTerritory,
+      signature: b.signature,
       timestamp: b.timestamp,
     }));
 

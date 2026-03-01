@@ -125,7 +125,7 @@ async function checkDelegation(
     // Check territory
     let territoryAuthorized = true;
     if (input.territory) {
-      const agentTerritory = identity.identity.homeCells ?? [];
+      const agentTerritory = identity.homeCells ?? [];
       territoryAuthorized = agentTerritory.includes(input.territory);
     }
 
@@ -158,7 +158,7 @@ async function checkDelegation(
       scope: delegation
         ? ((delegation as unknown as Record<string, unknown>).scope as Record<string, unknown> ?? null)
         : null,
-      territory: identity.identity.homeCells ?? [],
+      territory: identity.homeCells ?? [],
       delegationChain: {
         valid: chainInfo?.valid ?? false,
         depth: chainInfo?.chain_depth ?? 0,

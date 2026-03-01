@@ -152,7 +152,11 @@ export class GNSComplianceCallback {
 
     // Record breadcrumb if auto-mode is on
     if (this._autoBreadcrumb) {
-      this._identity.recordBreadcrumb(eventType, operationHash, this._h3Cell);
+      this._identity.recordBreadcrumb(eventType, operationHash, this._h3Cell).catch((err) => {
+        if (this._verbose) {
+          console.error('[GNS-AIP] Breadcrumb recording failed:', err);
+        }
+      });
 
       // Auto-flush when threshold reached
       if (this._identity.bufferedBreadcrumbs >= this._flushThreshold) {

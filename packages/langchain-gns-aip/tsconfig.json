@@ -13,7 +13,11 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@gns-aip/sdk": ["../sdk/src"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "__tests__", "__mocks__"]
