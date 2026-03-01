@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gns-aip"
+version = "0.1.0"
+description = "GNS-AIP Agent Identity Protocol — Python SDK"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "GNS Foundation", email = "dev@gnsfoundation.org" }]
+keywords = [
+  "gns", "aip", "agent-identity", "compliance", "delegation",
+  "proof-of-trajectory", "eu-ai-act", "breadcrumbs", "ed25519",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Security",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+  "httpx>=0.25.0",
+  "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "pytest-asyncio>=0.21",
+  "pytest-httpx>=0.30",
+  "ruff>=0.3.0",
+  "mypy>=1.8.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/GNS-Foundation/GNS-AIP"
+Repository = "https://github.com/GNS-Foundation/GNS-AIP"
+Documentation = "https://github.com/GNS-Foundation/GNS-AIP#readme"
+
+[tool.hatch.build.targets.wheel]
+packages = ["gns_aip"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = ["httpx_mock: configure httpx mock options"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
