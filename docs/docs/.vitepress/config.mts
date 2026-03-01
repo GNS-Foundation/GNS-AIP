@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'GNS-AIP',
   description: 'Agent Identity Protocol — Give your AI agents provable identity, delegation, and compliance',
-  base: '/GNS-AIP/',
+
   head: [
     ['link', { rel: 'icon', href: '/logo.png' }],
     ['meta', { name: 'theme-color', content: '#0A1628' }],
@@ -23,17 +23,21 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Guida', link: '/it/guide/what-is-gns-aip' },
-          { text: 'SDK', items: [
-            { text: 'TypeScript', link: '/it/sdk/typescript/' },
-            { text: 'Python', link: '/it/sdk/python/' },
-          ]},
-          { text: 'Integrazioni', items: [
-            { text: 'LangChain', link: '/it/integrations/langchain/' },
-            { text: 'OpenAI Agents', link: '/it/integrations/openai/' },
-            { text: 'Vercel AI', link: '/it/integrations/vercel/' },
-            { text: 'CrewAI', link: '/it/integrations/crewai/' },
-            { text: 'AutoGen', link: '/it/integrations/autogen/' },
-          ]},
+          {
+            text: 'SDK', items: [
+              { text: 'TypeScript', link: '/it/sdk/typescript/' },
+              { text: 'Python', link: '/it/sdk/python/' },
+            ]
+          },
+          {
+            text: 'Integrazioni', items: [
+              { text: 'LangChain', link: '/it/integrations/langchain/' },
+              { text: 'OpenAI Agents', link: '/it/integrations/openai/' },
+              { text: 'Vercel AI', link: '/it/integrations/vercel/' },
+              { text: 'CrewAI', link: '/it/integrations/crewai/' },
+              { text: 'AutoGen', link: '/it/integrations/autogen/' },
+            ]
+          },
           { text: 'Concetti', link: '/it/concepts/identity' },
           { text: 'API', link: '/it/api/' },
           { text: 'GitHub', link: 'https://github.com/GNS-Foundation/GNS-AIP' },
@@ -133,17 +137,21 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: 'Guía', link: '/es/guide/what-is-gns-aip' },
-          { text: 'SDKs', items: [
-            { text: 'TypeScript', link: '/es/sdk/typescript/' },
-            { text: 'Python', link: '/es/sdk/python/' },
-          ]},
-          { text: 'Integraciones', items: [
-            { text: 'LangChain', link: '/es/integrations/langchain/' },
-            { text: 'OpenAI Agents', link: '/es/integrations/openai/' },
-            { text: 'Vercel AI', link: '/es/integrations/vercel/' },
-            { text: 'CrewAI', link: '/es/integrations/crewai/' },
-            { text: 'AutoGen', link: '/es/integrations/autogen/' },
-          ]},
+          {
+            text: 'SDKs', items: [
+              { text: 'TypeScript', link: '/es/sdk/typescript/' },
+              { text: 'Python', link: '/es/sdk/python/' },
+            ]
+          },
+          {
+            text: 'Integraciones', items: [
+              { text: 'LangChain', link: '/es/integrations/langchain/' },
+              { text: 'OpenAI Agents', link: '/es/integrations/openai/' },
+              { text: 'Vercel AI', link: '/es/integrations/vercel/' },
+              { text: 'CrewAI', link: '/es/integrations/crewai/' },
+              { text: 'AutoGen', link: '/es/integrations/autogen/' },
+            ]
+          },
           { text: 'Conceptos', link: '/es/concepts/identity' },
           { text: 'API', link: '/es/api/' },
           { text: 'GitHub', link: 'https://github.com/GNS-Foundation/GNS-AIP' },
@@ -242,17 +250,21 @@ export default defineConfig({
     siteTitle: 'GNS-AIP',
     nav: [
       { text: 'Guide', link: '/guide/what-is-gns-aip' },
-      { text: 'SDKs', items: [
-        { text: 'TypeScript', link: '/sdk/typescript/' },
-        { text: 'Python', link: '/sdk/python/' },
-      ]},
-      { text: 'Integrations', items: [
-        { text: 'LangChain', link: '/integrations/langchain/' },
-        { text: 'OpenAI Agents', link: '/integrations/openai/' },
-        { text: 'Vercel AI', link: '/integrations/vercel/' },
-        { text: 'CrewAI', link: '/integrations/crewai/' },
-        { text: 'AutoGen', link: '/integrations/autogen/' },
-      ]},
+      {
+        text: 'SDKs', items: [
+          { text: 'TypeScript', link: '/sdk/typescript/' },
+          { text: 'Python', link: '/sdk/python/' },
+        ]
+      },
+      {
+        text: 'Integrations', items: [
+          { text: 'LangChain', link: '/integrations/langchain/' },
+          { text: 'OpenAI Agents', link: '/integrations/openai/' },
+          { text: 'Vercel AI', link: '/integrations/vercel/' },
+          { text: 'CrewAI', link: '/integrations/crewai/' },
+          { text: 'AutoGen', link: '/integrations/autogen/' },
+        ]
+      },
       { text: 'Concepts', link: '/concepts/identity' },
       { text: 'API Reference', link: '/api/' },
       {
