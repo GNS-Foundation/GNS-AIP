@@ -1,0 +1,47 @@
+{
+  "name": "langchain-gns-aip",
+  "version": "0.1.0",
+  "description": "GNS-AIP identity, compliance, and delegation for LangChain agents",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint src/",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "langchain", "gns", "aip", "agent-identity",
+    "compliance", "delegation", "proof-of-trajectory", "eu-ai-act"
+  ],
+  "author": "GNS Foundation <dev@gnsfoundation.org>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GNS-Foundation/langchain-gns-aip"
+  },
+  "peerDependencies": {
+    "@langchain/core": ">=0.2.0",
+    "zod": ">=3.22.0"
+  },
+  "dependencies": {
+    "@gns-aip/sdk": "^0.1.0"
+  },
+  "devDependencies": {
+    "@langchain/core": "^0.3.0",
+    "@types/jest": "^29.5.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.4.0",
+    "zod": "^3.22.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/__tests__"],
+    "moduleNameMapper": {
+      "^@gns-aip/sdk$": "<rootDir>/__mocks__/@gns-aip/sdk.ts"
+    }
+  }
+}
