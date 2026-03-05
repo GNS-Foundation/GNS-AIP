@@ -1,0 +1,29 @@
+name = "gns-aip-gateway"
+main = "gns-worker.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# KV namespace for audit logs
+# Create with: wrangler kv namespace create GNS_AUDIT_LOG
+[[kv_namespaces]]
+binding = "GNS_AUDIT_LOG"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+# Environment variables
+[vars]
+GNS_ORIGIN_URL = "https://gns-backend-production.up.railway.app"
+
+# Trusted human principal public keys (comma-separated hex)
+# Get from: GCRUMBS app → Settings → Identity → Copy Public Key
+GNS_HUMAN_PRINCIPALS = "REPLACE_WITH_YOUR_HUMAN_PK_HEX"
+
+# Revoked cert IDs (comma-separated, update as needed)
+GNS_REVOKED_CERTS = ""
+
+# Routes — replace with your actual domain
+[[routes]]
+pattern = "api.gns.foundation/*"
+zone_name = "gns.foundation"
+
+# Development: wrangler dev
+# Production:  wrangler deploy
