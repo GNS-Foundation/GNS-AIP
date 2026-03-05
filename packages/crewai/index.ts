@@ -65,10 +65,12 @@ import {
   verifyDelegationChain,
   getEffectiveConstraints,
   createVirtualBreadcrumb,
+  verifyBreadcrumbChain,
+  chainStatistics,
   calculateComplianceScore,
 } from '@gns-aip/sdk';
-import { HitlEngine, HitlEscalationRequest, DEFAULT_HITL_POLICIES } from '@gns-aip/sdk';
-import type { AgentFacet, RiskLevel } from '@gns-aip/sdk';
+import { HitlEngine } from '@gns-aip/sdk';
+import type { AgentFacet, RiskLevel, HitlEscalationRequest } from '@gns-aip/sdk';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -370,8 +372,6 @@ export class GnsCrew {
       territoryCells: cfg.territoryCells,
       facetPermissions: cfg.manager.facets ?? ['read', 'write', 'execute', 'delegation'],
       maxSubDelegationDepth: maxDepth,
-      ttlSeconds: 3600,
-      purpose: `Manager: ${cfg.manager.role}`,
     }, Buffer.from(cfg.humanKeypair.secretKey).toString('hex'));
 
     this.manager = {
@@ -414,8 +414,6 @@ export class GnsCrew {
         {
           territoryCells: workerCells,
           facetPermissions: workerCfg.facets,
-          ttlSeconds: 3600,
-          purpose: `Worker: ${workerCfg.role}`,
         }
       );
 
@@ -498,15 +496,21 @@ export class GnsCrew {
     const prev = agent.breadcrumbs.length > 0
       ? agent.breadcrumbs[agent.breadcrumbs.length - 1] as { blockHash: string }
       : null;
-    const breadcrumb = await createVirtualBreadcrumb({
-      agentIdentity: agent.identity,
-      delegationCert: agent.delegationCert as Parameters<typeof createVirtualBreadcrumb>[0]['delegationCert'],
-      locationCell: cell,
-      locationResolution: 7,
-      operationType,
-      previousHash: prev?.blockHash ?? null,
-      index: agent.breadcrumbs.length,
-    });
+    const certHash = (agent.delegationCert as { certHash: string }).certHash;
+    const breadcrumb = await createVirtualBreadcrumb(
+      {
+        agentIdentity: agent.identity.publicKey,
+        operationCell: cell,
+        meta: {
+          operationType,
+          delegationCertHash: certHash,
+          facet: agent.facets[0] ?? 'general',
+          withinTerritory: true,
+        },
+      },
+      agent.identity.secretKey,
+      prev as Parameters<typeof createVirtualBreadcrumb>[2],
+    );
     agent.breadcrumbs.push(breadcrumb);
     return breadcrumb;
   }
@@ -527,9 +531,12 @@ export class GnsCrew {
     const chainCheck = this._verifyAllChains();
 
     const agentReports: GnsAgentReport[] = allAgents.map(agent => {
+      const chainResult = verifyBreadcrumbChain(agent.breadcrumbs as Parameters<typeof verifyBreadcrumbChain>[0]);
+      const stats = chainStatistics(agent.breadcrumbs as Parameters<typeof chainStatistics>[0]);
       const compliance = calculateComplianceScore(
-        agent.breadcrumbs as Parameters<typeof calculateComplianceScore>[0],
-        agent.delegationCert as Parameters<typeof calculateComplianceScore>[1],
+        stats,
+        chainResult.valid,
+        agent.identity.createdAt,
       );
       return {
         role: agent.role,

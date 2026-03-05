@@ -35,10 +35,12 @@ import {
   generateAgentIdentity,
   createDelegationCert,
   createVirtualBreadcrumb,
+  verifyBreadcrumbChain,
+  chainStatistics,
   calculateComplianceScore,
 } from '@gns-aip/sdk';
-import { HitlEngine, HitlEscalationRequest } from '@gns-aip/sdk';
-import type { AgentFacet, RiskLevel } from '@gns-aip/sdk';
+import { HitlEngine } from '@gns-aip/sdk';
+import type { AgentFacet, RiskLevel, HitlEscalationRequest } from '@gns-aip/sdk';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -223,8 +225,6 @@ export class GnsAgentExecutor {
       territoryCells: config.territoryCells,
       facetPermissions: config.facets,
       maxSubDelegationDepth: config.maxSubDelegationDepth ?? 0,
-      ttlSeconds: config.ttlSeconds ?? 3600,
-      purpose: config.purpose ?? 'LangChain agent — GNS-AIP governed',
     }, Buffer.from(config.humanKeypair.secretKey).toString('hex'));
 
     return new GnsAgentExecutor(config, agentIdentity, delegationCert);
@@ -245,9 +245,12 @@ export class GnsAgentExecutor {
     // Drop a breadcrumb for this invocation
     await this._dropBreadcrumb('invoke');
 
+    const chainResult = verifyBreadcrumbChain(this.breadcrumbs as Parameters<typeof verifyBreadcrumbChain>[0]);
+    const stats = chainStatistics(this.breadcrumbs as Parameters<typeof chainStatistics>[0]);
     const complianceResult = calculateComplianceScore(
-      this.breadcrumbs as Parameters<typeof calculateComplianceScore>[0],
-      this.delegationCert as Parameters<typeof calculateComplianceScore>[1],
+      stats,
+      chainResult.valid,
+      this.agentIdentity.createdAt,
     );
 
     return {
@@ -308,9 +311,12 @@ export class GnsAgentExecutor {
 
   /** Get current identity and compliance info (for UI display / logging) */
   getIdentityInfo(): GnsAgentIdentityInfo {
+    const chainResult = verifyBreadcrumbChain(this.breadcrumbs as Parameters<typeof verifyBreadcrumbChain>[0]);
+    const stats = chainStatistics(this.breadcrumbs as Parameters<typeof chainStatistics>[0]);
     const complianceResult = calculateComplianceScore(
-      this.breadcrumbs as Parameters<typeof calculateComplianceScore>[0],
-      this.delegationCert as Parameters<typeof calculateComplianceScore>[1],
+      stats,
+      chainResult.valid,
+      this.agentIdentity.createdAt,
     );
     return {
       publicKey: this.agentIdentity.publicKey,
@@ -347,15 +353,21 @@ export class GnsAgentExecutor {
       ? this.breadcrumbs[this.breadcrumbs.length - 1] as { blockHash: string }
       : null;
 
-    const breadcrumb = await createVirtualBreadcrumb({
-      agentIdentity: this.agentIdentity,
-      delegationCert: this.delegationCert as Parameters<typeof createVirtualBreadcrumb>[0]['delegationCert'],
-      locationCell: cell,
-      locationResolution: 7,
-      operationType,
-      previousHash: prev?.blockHash ?? null,
-      index: this.breadcrumbs.length,
-    });
+    const certHash = (this.delegationCert as { certHash: string }).certHash;
+    const breadcrumb = await createVirtualBreadcrumb(
+      {
+        agentIdentity: this.agentIdentity.publicKey,
+        operationCell: cell,
+        meta: {
+          operationType,
+          delegationCertHash: certHash,
+          facet: this.config.facets[0] ?? 'general',
+          withinTerritory: true,
+        },
+      },
+      this.agentIdentity.secretKey,
+      prev as Parameters<typeof createVirtualBreadcrumb>[2],
+    );
     this.breadcrumbs.push(breadcrumb);
   }
 
