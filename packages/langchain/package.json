@@ -1,0 +1,37 @@
+{
+  "name": "@gns-aip/langchain",
+  "version": "0.1.0",
+  "description": "GNS-AIP integration for LangChain — cryptographic identity, delegation certs, and EU AI Act HITL compliance for LangChain agents",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "gns", "gns-aip", "langchain", "ai-agents", "identity",
+    "delegation", "eu-ai-act", "hitl", "compliance", "web3"
+  ],
+  "author": "GNS Foundation",
+  "license": "Apache-2.0",
+  "peerDependencies": {
+    "@gns-aip/sdk": ">=0.1.0",
+    "@langchain/core": ">=0.3.0",
+    "langchain": ">=0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "langchain": { "optional": true },
+    "@langchain/core": { "optional": true }
+  },
+  "devDependencies": {
+    "@gns-aip/sdk": "^0.1.0",
+    "typescript": "^5.0.0"
+  }
+}
