@@ -7,7 +7,7 @@
 
 import nacl from 'tweetnacl';
 import { createHash } from 'crypto';
-import { AgentIdentity, AgentIdentityPublic, GNS_CONSTANTS } from './types';
+import { AgentIdentity, AgentIdentityPublic, GNS_CONSTANTS } from './types.js';
 
 // =============================================================================
 // Hex Utilities

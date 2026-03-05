@@ -25,8 +25,8 @@
 // to risk" that the EU AI Act requires.
 // =============================================================================
 
-import { DelegationCert } from './types';
-import { isDelegationActive, verifyDelegationCert } from './delegation';
+import { DelegationCert } from './types.js';
+import { isDelegationActive, verifyDelegationCert } from './delegation.js';
 
 // =============================================================================
 // Escalation Policy Definition

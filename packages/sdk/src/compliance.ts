@@ -15,8 +15,8 @@ import {
   ComplianceScore,
   ComplianceTier,
   TIER_THRESHOLDS,
-} from './types';
-import { ChainStats } from './breadcrumb';
+} from './types.js';
+import { ChainStats } from './breadcrumb.js';
 
 /**
  * Calculate the compliance score for an AI agent based on its breadcrumb chain stats.

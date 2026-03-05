@@ -14,7 +14,7 @@ import {
   DelegationCert,
   DelegationCertInput,
   GNS_AIP_PROTOCOL_VERSION,
-} from './types';
+} from './types.js';
 import {
   sign,
   verify,
@@ -22,7 +22,7 @@ import {
   sha256Hex,
   generateId,
   isValidPublicKey,
-} from './crypto';
+} from './crypto.js';
 
 // =============================================================================
 // Certificate Creation

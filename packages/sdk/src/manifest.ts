@@ -15,13 +15,13 @@ import {
   JurisdictionalScope,
   ComplianceTier,
   GNS_AIP_PROTOCOL_VERSION,
-} from './types';
+} from './types.js';
 import {
   sign,
   verify,
   canonicalJson,
   isValidPublicKey,
-} from './crypto';
+} from './crypto.js';
 
 // =============================================================================
 // Manifest Creation

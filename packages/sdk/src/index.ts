@@ -54,7 +54,7 @@ export type {
   ProvisionResponse,
   DelegateRequest,
   AIPDelegationHeader,
-} from './types';
+} from './types.js';
 
 export {
   GNS_AIP_VERSION,
@@ -62,7 +62,7 @@ export {
   GNS_CONSTANTS,
   TIER_THRESHOLDS,
   AGENT_FACETS,
-} from './types';
+} from './types.js';
 
 // === Crypto (keypair generation, signing, verification) ===
 export {
@@ -85,7 +85,7 @@ export {
   generateId,
   ed25519ToStellarAddress,
   stellarAddressToPublicKey,
-} from './crypto';
+} from './crypto.js';
 
 // === H3 Territorial Binding ===
 export {
@@ -102,7 +102,7 @@ export {
   isWithinJurisdiction,
   isTrajectoryPlausible,
   createContextDigest,
-} from './h3';
+} from './h3.js';
 
 // === Delegation Certificates ===
 export {
@@ -114,8 +114,8 @@ export {
   validateDelegation,
   serializeDelegationHeader,
   parseDelegationHeader,
-} from './delegation';
-export type { DelegationValidationResult } from './delegation';
+} from './delegation.js';
+export type { DelegationValidationResult } from './delegation.js';
 
 // === Virtual Breadcrumbs (Proof-of-Jurisdiction) ===
 export {
@@ -123,8 +123,8 @@ export {
   verifyBreadcrumb,
   verifyBreadcrumbChain,
   chainStatistics,
-} from './breadcrumb';
-export type { ChainVerificationResult, ChainStats } from './breadcrumb';
+} from './breadcrumb.js';
+export type { ChainVerificationResult, ChainStats } from './breadcrumb.js';
 
 // === Compliance Score (TierGate) ===
 export {
@@ -132,8 +132,8 @@ export {
   determineTier,
   isTierSufficientForFacet,
   nextTierProgress,
-} from './compliance';
-export type { TierProgress } from './compliance';
+} from './compliance.js';
+export type { TierProgress } from './compliance.js';
 
 // === Agent Manifest ===
 export {
@@ -141,27 +141,27 @@ export {
   signManifest,
   verifyManifest,
   updateManifestCompliance,
-} from './manifest';
+} from './manifest.js';
 
 // === Human-in-the-Loop Escalation ===
 export {
   EscalationTracker,
   createEscalationTracker,
   DEFAULT_ESCALATION_POLICIES,
-} from './escalation';
+} from './escalation.js';
 export type {
   EscalationPolicy,
   EscalationRequired,
   EscalationReason,
   EscalationTrackerState,
-} from './escalation';
+} from './escalation.js';
 
 // === MCP Middleware ===
 export {
   MCPMiddleware,
   MCPGateError,
   createMCPMiddleware,
-} from './mcp';
+} from './mcp.js';
 export type {
   MCPMiddlewareConfig,
   MCPRequestContext,
@@ -169,7 +169,20 @@ export type {
   MCPAuthEvent,
   MCPRejectEvent,
   MCPVerifyResult,
-} from './mcp';
+} from './mcp.js';
+
+// === Sub-Delegation Chain (Functional API) ===
+export {
+  createSubDelegation,
+  buildDelegationChain,
+  verifyDelegationChain,
+  getRootPrincipal,
+  getEffectiveConstraints,
+} from './sub-delegation.js';
+export type {
+  ChainVerificationResult as SubDelegationChainResult,
+  EffectiveConstraints,
+} from './sub-delegation.js';
 
 // === Barrel re-exports ===
 export * from './delegation-chain.js';

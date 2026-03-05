@@ -36,16 +36,16 @@
 //
 // =============================================================================
 
-import { ComplianceTier, DelegationCert, AGENT_FACETS } from './types';
+import { ComplianceTier, DelegationCert, AGENT_FACETS } from './types.js';
 import {
   verifyDelegationCert,
   isDelegationActive,
   isDelegationAuthorizedForCell,
   isDelegationAuthorizedForFacet,
   parseDelegationHeader,
-} from './delegation';
-import { verify } from './crypto';
-import { isTierSufficientForFacet } from './compliance';
+} from './delegation.js';
+import { verify } from './crypto.js';
+import { isTierSufficientForFacet } from './compliance.js';
 
 // =============================================================================
 // MCP Middleware Configuration

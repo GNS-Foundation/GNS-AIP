@@ -21,8 +21,8 @@ import {
   UNITS,
   gridDistance,
 } from 'h3-js';
-import { JurisdictionalScope, GNS_CONSTANTS } from './types';
-import { sha256Hex } from './crypto';
+import { JurisdictionalScope, GNS_CONSTANTS } from './types.js';
+import { sha256Hex } from './crypto.js';
 
 // =============================================================================
 // Core H3 Operations

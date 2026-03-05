@@ -14,14 +14,14 @@ import {
   VirtualBreadcrumb,
   VirtualBreadcrumbMeta,
   GNS_CONSTANTS,
-} from './types';
+} from './types.js';
 import {
   sign,
   verify,
   canonicalJson,
   sha256Hex,
-} from './crypto';
-import { createContextDigest } from './h3';
+} from './crypto.js';
+import { createContextDigest } from './h3.js';
 
 // =============================================================================
 // Breadcrumb Creation
