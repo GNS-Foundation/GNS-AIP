@@ -1,0 +1,48 @@
+{
+  "name": "@gns-aip/aws",
+  "version": "0.1.0",
+  "description": "GNS-AIP × AWS IAM — OIDC federation + session tags. No static IAM keys.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules test.js"
+  },
+  "keywords": [
+    "aws",
+    "iam",
+    "oidc",
+    "federation",
+    "sts",
+    "session-tags",
+    "abac",
+    "gns-aip",
+    "humanity-proof",
+    "zero-trust",
+    "ai-agent-identity",
+    "no-static-keys",
+    "assume-role"
+  ],
+  "author": "GNS Foundation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@gns-aip/sdk": "^0.1.0"
+  },
+  "peerDependencies": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GNS-Foundation/GNS-AIP"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3"
+  }
+}
