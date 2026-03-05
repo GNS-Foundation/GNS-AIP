@@ -1,0 +1,35 @@
+{
+  "name": "@gns-aip/cyberark",
+  "version": "0.1.0",
+  "description": "GNS-AIP × CyberArk Conjur — Delegated AI agent identity for PAM",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules test.js"
+  },
+  "keywords": [
+    "cyberark", "conjur", "pam", "privileged-access",
+    "gns-aip", "ai-agent-identity", "delegation-chain",
+    "proof-of-jurisdiction", "hitl", "eu-ai-act"
+  ],
+  "author": "GNS Foundation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@gns-aip/sdk": "^0.1.0"
+  },
+  "peerDependencies": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GNS-Foundation/GNS-AIP"
+  }
+}
