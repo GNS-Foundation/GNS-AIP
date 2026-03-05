@@ -1,0 +1,35 @@
+{
+  "name": "@gns-aip/crewai",
+  "version": "0.1.0",
+  "description": "GNS-AIP integration for CrewAI — maps Manager/Worker crew patterns onto cryptographic delegation chains with EU AI Act HITL compliance",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "gns", "gns-aip", "crewai", "ai-agents", "multi-agent",
+    "delegation", "eu-ai-act", "hitl", "compliance", "identity"
+  ],
+  "author": "GNS Foundation",
+  "license": "Apache-2.0",
+  "peerDependencies": {
+    "@gns-aip/sdk": ">=0.1.0",
+    "crewai": ">=0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "crewai": { "optional": true }
+  },
+  "devDependencies": {
+    "@gns-aip/sdk": "^0.1.0",
+    "typescript": "^5.0.0"
+  }
+}
