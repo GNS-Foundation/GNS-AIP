@@ -156,20 +156,6 @@ export type {
   EscalationTrackerState,
 } from './escalation';
 
-// === Sub-Delegation Chain ===
-export {
-  createSubDelegation,
-  buildDelegationChain,
-  verifyDelegationChain,
-  getRootPrincipal,
-  getEffectiveConstraints,
-} from './delegation-chain';
-export type {
-  DelegationChain,
-  ChainVerificationResult as DelegationChainVerificationResult,
-  EffectiveConstraints,
-} from './delegation-chain';
-
 // === MCP Middleware ===
 export {
   MCPMiddleware,
@@ -184,3 +170,8 @@ export type {
   MCPRejectEvent,
   MCPVerifyResult,
 } from './mcp';
+
+// === Barrel re-exports ===
+export * from './delegation-chain.js';
+export * from './hitl.js';
+export * from './oidc.js';

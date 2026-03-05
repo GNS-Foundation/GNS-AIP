@@ -17,5 +17,9 @@
     "url": "https://github.com/GNS-Foundation/GNS-AIP"
   },
   "author": "GNS Foundation",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@langchain/core": "^1.1.30",
+    "langsmith": "^0.5.7"
+  }
 }
