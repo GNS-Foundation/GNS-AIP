@@ -16,3 +16,4 @@ coverage/
 .nyc_output/
 *.tgz
 npm-debug.log*
+docs/docs/.vitepress/cache/
