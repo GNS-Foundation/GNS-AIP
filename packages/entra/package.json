@@ -1,0 +1,45 @@
+{
+  "name": "@gns-aip/entra",
+  "version": "0.1.0",
+  "description": "GNS-AIP × Microsoft Entra ID — Custom Claims Provider for TokenIssuanceStart",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules test.js"
+  },
+  "keywords": [
+    "azure",
+    "entra",
+    "microsoft",
+    "custom-claims-provider",
+    "token-issuance-start",
+    "gns-aip",
+    "humanity-proof",
+    "zero-trust",
+    "ai-agent-identity",
+    "oidc"
+  ],
+  "author": "GNS Foundation",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@gns-aip/sdk": "^0.1.0"
+  },
+  "peerDependencies": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GNS-Foundation/GNS-AIP"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3"
+  }
+}
