@@ -1,6 +1,6 @@
 {
   "name": "@gns-aip/sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "AI Agent Identity Protocol — Proof-of-Jurisdiction for AI agents on the GNS Protocol",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
