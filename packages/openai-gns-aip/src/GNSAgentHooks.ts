@@ -24,7 +24,7 @@
  *   });
  */
 
-import { GNSAgentSDK, DelegationChain } from '@gns-aip/sdk';
+import { GNSAgentSDK, DelegationChainCompat as DelegationChain } from './compat.js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

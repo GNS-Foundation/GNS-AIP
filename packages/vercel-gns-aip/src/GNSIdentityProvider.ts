@@ -35,7 +35,7 @@
  *   });
  */
 
-import { GNSAgentSDK, DelegationChain } from '@gns-aip/sdk';
+import { GNSAgentSDK, DelegationChainCompat as DelegationChain } from './compat.js';
 import { createGNSComplianceMiddleware, GNSComplianceMiddleware } from './GNSComplianceMiddleware';
 import { createGNSDelegationTool } from './GNSDelegationTool';
 

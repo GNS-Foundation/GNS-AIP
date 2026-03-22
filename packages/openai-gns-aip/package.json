@@ -39,7 +39,7 @@
     "zod": ">=3.22.0"
   },
   "dependencies": {
-    "@gns-aip/sdk": "*"
+    "@gns-aip/sdk": "^0.1.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

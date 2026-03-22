@@ -24,7 +24,7 @@
  *   → returns { authorized: true, complianceTier: 'VERIFIED', ... }
  */
 
-import { GNSAgentSDK, DelegationChain } from '@gns-aip/sdk';
+import { GNSAgentSDK, DelegationChainCompat as DelegationChain } from './compat.js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -117,7 +117,7 @@ export function createGNSDelegationTool(options: GNSDelegationToolOptions) {
         let complianceTier = 'UNKNOWN';
         let complianceScore: Record<string, unknown> = {};
         try {
-          const compliance = (await sdk.getCompliance(agentId)) as Record<string, unknown>;
+          const compliance = (await sdk.getCompliance(agentId)) as unknown as Record<string, unknown>;
           complianceTier = (compliance.tier as string) || 'UNKNOWN';
           complianceScore = compliance;
         } catch {
@@ -127,7 +127,7 @@ export function createGNSDelegationTool(options: GNSDelegationToolOptions) {
         // 4. Get manifest for scope details
         let scope: { actions: string[]; resources: string[] } | undefined;
         try {
-          const manifest = (await sdk.getAgentManifest(agentId)) as Record<string, unknown>;
+          const manifest = (await sdk.getAgentManifest(agentId)) as unknown as Record<string, unknown>;
           const chain = manifest.delegationChain as Array<Record<string, unknown>>;
           if (chain && chain.length > 0) {
             const latestCert = chain[chain.length - 1];
@@ -145,7 +145,7 @@ export function createGNSDelegationTool(options: GNSDelegationToolOptions) {
         let territoryAuthorized = true;
         if (input.territory) {
           try {
-            const manifest = (await sdk.getAgentManifest(agentId)) as Record<string, unknown>;
+            const manifest = (await sdk.getAgentManifest(agentId)) as unknown as Record<string, unknown>;
             const homeCells = (manifest.homeCells as string[]) || [];
             territoryAuthorized = homeCells.includes(input.territory) || homeCells.includes('*');
           } catch {
@@ -214,7 +214,7 @@ export function createGNSComplianceGuardrail(options: {
       outputInfo?: { reason: string; currentTier: string; minimumTier: string };
     }> => {
       try {
-        const compliance = (await sdk.getCompliance(agentId)) as Record<string, unknown>;
+        const compliance = (await sdk.getCompliance(agentId)) as unknown as Record<string, unknown>;
         const currentTier = (compliance.tier as string) || 'SHADOW';
         const currentTierIndex = tierOrder.indexOf(currentTier);
 

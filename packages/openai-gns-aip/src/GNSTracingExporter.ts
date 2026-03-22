@@ -23,7 +23,7 @@
  * - All content is hashed, not stored
  */
 
-import { GNSAgentSDK } from '@gns-aip/sdk';
+import { GNSAgentSDK } from './compat.js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
