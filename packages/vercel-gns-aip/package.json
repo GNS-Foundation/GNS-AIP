@@ -1,10 +1,12 @@
 {
-  "name": "vercel-gns-aip",
+  "name": "@gns-aip/vercel",
   "version": "0.1.0",
   "description": "GNS-AIP identity, compliance, and delegation for Vercel AI SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest --passWithNoTests",
@@ -12,9 +14,18 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "vercel", "ai-sdk", "gns", "aip", "agent-identity",
-    "compliance", "middleware", "proof-of-trajectory", "eu-ai-act",
-    "language-model", "guardrails", "next-js"
+    "vercel",
+    "ai-sdk",
+    "gns",
+    "aip",
+    "agent-identity",
+    "compliance",
+    "middleware",
+    "proof-of-trajectory",
+    "eu-ai-act",
+    "language-model",
+    "guardrails",
+    "next-js"
   ],
   "author": "GNS Foundation <dev@gnsfoundation.org>",
   "license": "MIT",
@@ -40,12 +51,19 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "roots": ["<rootDir>/__tests__"],
+    "roots": [
+      "<rootDir>/__tests__"
+    ],
     "moduleNameMapper": {
       "^@gns-aip/sdk$": "<rootDir>/__mocks__/@gns-aip/sdk.ts"
     },
     "transform": {
-      "^.+\\.tsx?$": ["ts-jest", { "diagnostics": false }]
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "diagnostics": false
+        }
+      ]
     }
   }
 }

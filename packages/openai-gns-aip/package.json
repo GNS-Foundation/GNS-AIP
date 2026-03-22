@@ -1,5 +1,5 @@
 {
-  "name": "openai-gns-aip",
+  "name": "@gns-aip/openai",
   "version": "0.1.0",
   "description": "GNS-AIP identity, compliance, and delegation for OpenAI Agents SDK",
   "main": "dist/index.js",
